@@ -1,0 +1,57 @@
+/* FlashSale.css */
+
+/* Ẩn thanh cuộn dọc mặc định nhưng vẫn cho phép vuốt ngang */
+.flash-sale-slider {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 5px; /* Để box-shadow của card không bị cắt gọt */
+}
+
+/* Cú pháp giấu thanh scroll trên Chrome, Safari */
+.flash-sale-slider::-webkit-scrollbar {
+  display: none;
+}
+
+/* Định dạng tiêu đề sách cắt tối đa 2 dòng */
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Định vị 2 nút bấm trượt lơ lửng */
+.slide-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.slide-btn:hover {
+  background-color: white;
+  color: #f54124;
+  transform: translateY(-50%) scale(1.1); /* To lên một chút khi hover */
+}
+
+.slide-btn.left {
+  left: -15px; /* Thò ra ngoài rìa một chút */
+}
+
+.slide-btn.right {
+  right: -15px; /* Thò ra ngoài rìa một chút */
+}
+
+/* Chỉnh lại thanh tiến độ bán hàng cho nổi bật text */
+.progress-bar {
+  transition: width 0.5s ease-in-out;
+}
