@@ -1,9 +1,18 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 
-const DangNhap: React.FC = () => {
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+interface PopupDangNhapProps {
+  isOpen: boolean;
+  onClose: () => void;
+  initialTab?: 'login' | 'register'; // Cho phép truyền vào mở mặc định tab nào
+}
+
+const PopupDangNhap: React.FC<PopupDangNhapProps> = ({ isOpen, onClose, initialTab = 'login' }) => {
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>(initialTab);
+  
+  // Mỗi khi Popup mở lên, tự động chuyển về đúng Tab mà user đã click
+  useEffect(() => {
+    if (isOpen) setActiveTab(initialTab);
+  }, [isOpen, initialTab]);
 
   // --- STATE ĐĂNG NHẬP ---
   const [username, setUsername] = useState("");
@@ -19,6 +28,8 @@ const DangNhap: React.FC = () => {
   const [ten, setTen] = useState("");
   const [soDienThoai, setSoDienThoai] = useState("");
   const [thongBaoRegister, setThongBaoRegister] = useState("");
+
+  if (!isOpen) return null;
 
   // XỬ LÝ ĐĂNG NHẬP
   const handleLoginSubmit = (event: React.FormEvent) => {
@@ -36,10 +47,7 @@ const DangNhap: React.FC = () => {
       .then((data) => {
         localStorage.setItem("accessToken", data.accessToken);
         localStorage.setItem("refreshToken", data.refreshToken);
-        setTimeout(() => { 
-            navigate("/"); // Chuyển về trang chủ
-            window.location.reload(); // Refresh để cập nhật avatar
-        }, 1000);
+        setTimeout(() => { onClose(); window.location.reload(); }, 1000);
       })
       .catch(() => setThongBaoLogin("Tài khoản hoặc mật khẩu không chính xác!"));
   };
@@ -65,9 +73,14 @@ const DangNhap: React.FC = () => {
     }
   };
 
+  // Click vào nền đen để đóng Popup
+  const handleOverlayClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose();
+  }
+
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
+    <div style={styles.overlay} onClick={handleOverlayClick}>
+      <div style={styles.modal}>
         {/* HEADER TABS */}
         <div style={styles.tabContainer}>
           <div style={{ ...styles.tab, ...(activeTab === 'login' ? styles.activeTab : {}) }} onClick={() => setActiveTab('login')}>
@@ -79,7 +92,7 @@ const DangNhap: React.FC = () => {
         </div>
 
         {/* BODY TABS */}
-        <div style={{ padding: "30px 40px" }}>
+        <div style={{ padding: "20px 30px" }}>
             {/* ====== TAB ĐĂNG NHẬP ====== */}
             {activeTab === 'login' && (
                 <form onSubmit={handleLoginSubmit}>
@@ -87,51 +100,51 @@ const DangNhap: React.FC = () => {
                     <label style={styles.label}>Tên đăng nhập / Email</label>
                     <input type="text" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)} required />
                   </div>
-                  <div className="mb-4">
+                  <div className="mb-3">
                     <label style={styles.label}>Mật khẩu</label>
                     <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
                   </div>
-                  {thongBaoLogin && <div className="mb-3 text-center" style={{ color: thongBaoLogin.includes("thành công") ? "green" : "red", fontSize: "14px", fontWeight: "bold" }}>{thongBaoLogin}</div>}
-                  <button type="submit" className="btn w-100 py-2" style={styles.actionBtn}>Đăng nhập</button>
+                  {thongBaoLogin && <div className="mb-3 text-center" style={{ color: thongBaoLogin.includes("thành công") ? "green" : "red", fontSize: "14px" }}>{thongBaoLogin}</div>}
+                  <button type="submit" className="btn w-100" style={styles.actionBtn}>Đăng nhập</button>
                 </form>
             )}
 
             {/* ====== TAB ĐĂNG KÝ ====== */}
             {activeTab === 'register' && (
-                <form onSubmit={handleRegisterSubmit}>
-                  <div className="row g-3 mb-4">
-                      <div className="col-md-6">
+                <form onSubmit={handleRegisterSubmit} style={{ maxHeight: '60vh', overflowY: 'auto', overflowX: 'hidden' }}>
+                  <div className="row g-2 mb-3">
+                      <div className="col-6">
                         <label style={styles.label}>Tên đăng nhập</label>
-                        <input type="text" className="form-control" value={tenDangNhap} onChange={(e) => setTenDangNhap(e.target.value)} required />
+                        <input type="text" className="form-control form-control-sm" value={tenDangNhap} onChange={(e) => setTenDangNhap(e.target.value)} required />
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-6">
                         <label style={styles.label}>Email</label>
-                        <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                        <input type="email" className="form-control form-control-sm" value={email} onChange={(e) => setEmail(e.target.value)} required />
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-6">
                         <label style={styles.label}>Mật khẩu</label>
-                        <input type="password" className="form-control" value={matKhau} onChange={(e) => setMatKhau(e.target.value)} required />
+                        <input type="password" className="form-control form-control-sm" value={matKhau} onChange={(e) => setMatKhau(e.target.value)} required />
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-6">
                         <label style={styles.label}>Nhập lại mật khẩu</label>
-                        <input type="password" className="form-control" value={matKhauLapLai} onChange={(e) => setMatKhauLapLai(e.target.value)} required />
+                        <input type="password" className="form-control form-control-sm" value={matKhauLapLai} onChange={(e) => setMatKhauLapLai(e.target.value)} required />
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-6">
                         <label style={styles.label}>Họ đệm</label>
-                        <input type="text" className="form-control" value={hoDem} onChange={(e) => setHoDem(e.target.value)} required />
+                        <input type="text" className="form-control form-control-sm" value={hoDem} onChange={(e) => setHoDem(e.target.value)} required />
                       </div>
-                      <div className="col-md-6">
+                      <div className="col-6">
                         <label style={styles.label}>Tên</label>
-                        <input type="text" className="form-control" value={ten} onChange={(e) => setTen(e.target.value)} required />
+                        <input type="text" className="form-control form-control-sm" value={ten} onChange={(e) => setTen(e.target.value)} required />
                       </div>
                       <div className="col-12">
                         <label style={styles.label}>Số điện thoại</label>
-                        <input type="text" className="form-control" value={soDienThoai} onChange={(e) => setSoDienThoai(e.target.value)} required />
+                        <input type="text" className="form-control form-control-sm" value={soDienThoai} onChange={(e) => setSoDienThoai(e.target.value)} required />
                       </div>
                   </div>
                   
-                  {thongBaoRegister && <div className="mb-3 text-center" style={{ color: thongBaoRegister.includes("thành công") ? "green" : "red", fontSize: "14px", fontWeight: "bold" }}>{thongBaoRegister}</div>}
-                  <button type="submit" className="btn w-100 py-2" style={styles.actionBtn}>Đăng ký tài khoản</button>
+                  {thongBaoRegister && <div className="mb-3 text-center" style={{ color: thongBaoRegister.includes("thành công") ? "green" : "red", fontSize: "14px" }}>{thongBaoRegister}</div>}
+                  <button type="submit" className="btn w-100" style={styles.actionBtn}>Đăng ký tài khoản</button>
                 </form>
             )}
         </div>
@@ -140,59 +153,14 @@ const DangNhap: React.FC = () => {
   );
 };
 
-// CSS Tùy chỉnh cho trang Đăng Nhập
 const styles: { [key: string]: React.CSSProperties } = {
-  container: { 
-    display: "flex", 
-    justifyContent: "center", 
-    alignItems: "center", 
-    minHeight: "75vh", // Đẩy form ra giữa màn hình
-    backgroundColor: "#f5f5f5", // Màu nền xám nhạt cho toàn trang
-    padding: "40px 20px" 
-  },
-  card: { 
-    backgroundColor: "#fff", 
-    borderRadius: "12px", 
-    width: "550px", // Form to hơn xíu cho đẹp
-    maxWidth: "100%", 
-    overflow: "hidden", 
-    boxShadow: "0 10px 30px rgba(0,0,0,0.1)" // Đổ bóng cho card nổi lên
-  },
-  tabContainer: { 
-    display: "flex", 
-    backgroundColor: '#f8f9fa', 
-    borderBottom: "1px solid #dee2e6" 
-  },
-  tab: { 
-    flex: 1, 
-    textAlign: "center", 
-    padding: "18px", 
-    cursor: "pointer", 
-    fontWeight: "bold", 
-    color: "#6c757d", 
-    fontSize: '16px', 
-    transition: 'all 0.3s' 
-  },
-  activeTab: { 
-    color: "#dc3545", 
-    borderBottom: "3px solid #dc3545", 
-    backgroundColor: '#fff' 
-  },
-  label: { 
-    fontSize: "14px", 
-    color: "#495057", 
-    marginBottom: "6px", 
-    fontWeight: 600 
-  },
-  actionBtn: { 
-    backgroundColor: "#dc3545", 
-    color: "white", 
-    fontWeight: "bold", 
-    fontSize: "16px",
-    borderRadius: "8px", 
-    border: 'none',
-    transition: '0.2s'
-  },
+  overlay: { position: "fixed", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(0, 0, 0, 0.6)", display: "flex", justifyContent: "center", alignItems: "center", zIndex: 9999 },
+  modal: { backgroundColor: "#fff", borderRadius: "12px", width: "480px", maxWidth: "95%", overflow: "hidden", boxShadow: "0 10px 25px rgba(0,0,0,0.2)" },
+  tabContainer: { display: "flex", backgroundColor: '#f8f9fa', borderBottom: "1px solid #dee2e6" },
+  tab: { flex: 1, textAlign: "center", padding: "15px", cursor: "pointer", fontWeight: "bold", color: "#6c757d", fontSize: '16px', transition: '0.2s' },
+  activeTab: { color: "#dc3545", borderBottom: "3px solid #dc3545", backgroundColor: '#fff' },
+  label: { fontSize: "13px", color: "#495057", marginBottom: "4px", fontWeight: 600 },
+  actionBtn: { backgroundColor: "#dc3545", color: "white", fontWeight: "bold", padding: "10px", borderRadius: "8px", border: 'none' },
 };
 
-export default DangNhap;
+export default PopupDangNhap;
