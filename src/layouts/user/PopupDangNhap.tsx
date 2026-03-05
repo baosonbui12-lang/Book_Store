@@ -3,13 +3,12 @@ import React, { useState, useEffect } from "react";
 interface PopupDangNhapProps {
   isOpen: boolean;
   onClose: () => void;
-  initialTab?: 'login' | 'register'; // Cho phép truyền vào mở mặc định tab nào
+  initialTab?: 'login' | 'register';
 }
 
 const PopupDangNhap: React.FC<PopupDangNhapProps> = ({ isOpen, onClose, initialTab = 'login' }) => {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>(initialTab);
   
-  // Mỗi khi Popup mở lên, tự động chuyển về đúng Tab mà user đã click
   useEffect(() => {
     if (isOpen) setActiveTab(initialTab);
   }, [isOpen, initialTab]);
@@ -73,7 +72,6 @@ const PopupDangNhap: React.FC<PopupDangNhapProps> = ({ isOpen, onClose, initialT
     }
   };
 
-  // Click vào nền đen để đóng Popup
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) onClose();
   }

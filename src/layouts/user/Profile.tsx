@@ -76,7 +76,7 @@ const UserProfile = () => {
         {accessToken && thongTinNguoiDung ? (
           <img src={thongTinNguoiDung.anhDaiDien} alt="Avatar" className="rounded-circle" style={{ width: '30px', height: '30px', objectFit: 'cover' }} />
         ) : (
-          <i className="fas fa-user-circle fs-3 text-light"></i>
+          <i className="fas fa-user-circle fs-3 text-secondary"></i>
         )}
       </span>
 
