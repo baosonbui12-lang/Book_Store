@@ -503,7 +503,13 @@ const MegaMenu: React.FC = () => {
       {isOpen && (
         <>
           <div className="hover-bridge"></div>
-          <div className="mega-menu-backdrop"></div>
+
+          {/* SỰ KIỆN ĐÓNG BẢNG ĐƯỢC THÊM VÀO ĐÂY */}
+          <div
+            className="mega-menu-backdrop"
+            onMouseEnter={() => setIsOpen(false)}
+            onClick={() => setIsOpen(false)}
+          ></div>
 
           <div className="mega-menu-dropdown-wrapper">
             <div className="container">

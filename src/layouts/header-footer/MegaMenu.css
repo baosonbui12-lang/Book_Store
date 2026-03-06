@@ -40,6 +40,9 @@
   width: 100vw;
   z-index: 1050;
   padding-top: 0; /* Bỏ padding đi để nó áp sát lên trên */
+
+  /* SỬA LỖI ĐÓNG BẢNG: Đục thủng lớp tàng hình thừa thãi 2 bên */
+  pointer-events: none;
 }
 
 /* KHUNG TRẮNG BÊN TRONG */
@@ -51,6 +54,9 @@
   overflow: hidden;
   /* Thêm bóng đổ mạnh hơn để khi đè lên Navbar trông nó nổi bật hẳn lên */
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+
+  /* SỬA LỖI ĐÓNG BẢNG: Khôi phục lại khả năng nhận diện chuột cho đúng cái khung trắng này */
+  pointer-events: auto;
 }
 
 /* 3. CỘT TRÁI (Danh mục) */
