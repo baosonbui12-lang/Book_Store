@@ -1,0 +1,111 @@
+/* MegaMenu.css */
+
+.mega-menu-wrapper {
+  position: relative;
+}
+
+.trigger-btn {
+  height: 40px;
+  background-color: transparent !important;
+}
+
+/* === CẦU NỐI TÀNG HÌNH === */
+.hover-bridge {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  width: 100%;
+  height: 60px; /* Nới rộng cầu nối để bao trọn khoảng hở */
+  background-color: transparent;
+  z-index: 1060;
+}
+
+/* 1. MÀN ĐEN MỜ (OVERLAY) */
+.mega-menu-backdrop {
+  position: fixed;
+  top: 100px; /* Đẩy màn đen lên cao một chút */
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 100px);
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 1040;
+}
+
+/* 2. KHUNG CHỨA MENU BÊN NGOÀI */
+.mega-menu-dropdown-wrapper {
+  position: fixed;
+  /* ĐIỂM ĂN TIỀN 1: Đẩy top lên 96px để nó "cắn" vào thanh Navbar (trước đó là 107px) */
+  top: 96px;
+  left: 0;
+  width: 100vw;
+  z-index: 1050;
+  padding-top: 0; /* Bỏ padding đi để nó áp sát lên trên */
+}
+
+/* KHUNG TRẮNG BÊN TRONG */
+.mega-menu-container {
+  /* ĐIỂM ĂN TIỀN 2: Ép cứng chiều cao, không dùng min-height nữa */
+  height: 530px;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  overflow: hidden;
+  /* Thêm bóng đổ mạnh hơn để khi đè lên Navbar trông nó nổi bật hẳn lên */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 3. CỘT TRÁI (Danh mục) */
+.mega-menu-left {
+  width: 280px;
+  border-right: 1px solid #eaeaea;
+  height: 100%; /* Chiếm trọn 530px */
+  overflow-y: auto; /* Nếu menu trái thêm nhiều quá thì cho phép cuộn */
+}
+
+.menu-item {
+  cursor: pointer;
+  font-size: 15px;
+  color: #333;
+  transition: all 0.2s ease;
+}
+
+.menu-item:hover {
+  color: #c92127;
+  background-color: #fff;
+}
+
+.menu-item.active {
+  color: #333;
+  border-left: 5px solid #c92127;
+}
+
+/* 4. CỘT PHẢI (Menu Con) */
+.mega-menu-right {
+  width: calc(100% - 280px);
+  height: 100%; /* Chiếm trọn 530px */
+  overflow-y: auto; /* Bật thanh cuộn nếu danh sách quá dài (tránh vỡ layout) */
+}
+
+.sub-link {
+  transition: all 0.2s ease;
+}
+
+.sub-link:hover {
+  color: #c92127 !important;
+  transform: translateX(3px);
+  display: inline-block;
+}
+
+/* === Ẩn thanh cuộn tàng hình cho đẹp mắt === */
+.mega-menu-left::-webkit-scrollbar,
+.mega-menu-right::-webkit-scrollbar {
+  width: 6px;
+}
+.mega-menu-left::-webkit-scrollbar-thumb,
+.mega-menu-right::-webkit-scrollbar-thumb {
+  background-color: #ddd;
+  border-radius: 10px;
+}
+.mega-menu-left::-webkit-scrollbar-track,
+.mega-menu-right::-webkit-scrollbar-track {
+  background: transparent;
+}
